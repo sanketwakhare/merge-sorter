@@ -11,7 +11,7 @@ public class MergeSort<T extends Comparable<T>> {
         List<T> result = new ArrayList<>();
 
         // edge cases
-        if (startIndex > endIndex) return result;
+        if (startIndex > endIndex || startIndex == -1 || endIndex == -1) return result;
         // if only single element is present, return
         if (startIndex == endIndex) {
             result.add(list.get(startIndex));
