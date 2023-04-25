@@ -44,7 +44,7 @@ public class MergeSort<T extends Comparable<T>> {
             }
         }
 
-        // add the remaining elements from left and right lists
+        // add the remaining elements from left or right lists
         while (leftIndex < left.size()) {
             result.add(left.get(leftIndex));
             leftIndex++;
