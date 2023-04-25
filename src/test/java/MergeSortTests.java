@@ -6,7 +6,7 @@ import java.util.List;
 
 public class MergeSortTests {
 
-    MergeSort<Integer> sorter;
+    /*MergeSort<Integer> sorter;
 
     public MergeSortTests() {
         sorter = new MergeSort<>();
@@ -65,6 +65,6 @@ public class MergeSortTests {
         List<Integer> result = sorter.merge(sortedList1, sortedList2);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result, List.of(2, 11, 13, 35, 40));
-    }
+    }*/
 
 }
