@@ -1,18 +1,22 @@
 package com.sanket.services;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
-public class FileReaderService implements Callable<List<Integer>> {
+public class FileReaderService implements Runnable {
 
     private final String fileName;
+    private List<Integer> list;
 
     public FileReaderService(String fileName) {
         this.fileName = fileName;
     }
 
+    public List<Integer> getList() {
+        return list;
+    }
+
     @Override
-    public List<Integer> call() {
-        return FileService.getListFromFile(this.fileName);
+    public void run() {
+        this.list = FileService.getListFromFile(this.fileName);
     }
 }
