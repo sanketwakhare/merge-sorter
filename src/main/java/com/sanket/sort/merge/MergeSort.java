@@ -2,22 +2,24 @@ package com.sanket.sort.merge;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class MergeSort<T extends Comparable<T>> implements Callable<List<T>> {
 
     List<T> numbers;
+    private List<T> sortedResult;
 
     public MergeSort(List<T> list) {
         if (list == null || list.size() == 0) this.numbers = new ArrayList<>();
         else this.numbers = list;
+        this.sortedResult = new ArrayList<>();
     }
 
-    public List<T> sort(List<T> list, int startIndex, int endIndex) throws Exception {
+    public List<T> getSortedResult() {
+        return sortedResult;
+    }
 
+    public List<T> sort(List<T> list, int startIndex, int endIndex) throws ExecutionException, InterruptedException {
         // initialize result list
         List<T> result = new ArrayList<>();
 
@@ -37,11 +39,14 @@ public class MergeSort<T extends Comparable<T>> implements Callable<List<T>> {
 
         // add threading for the merge sort
         ExecutorService executorService = Executors.newFixedThreadPool(10);
-        Future<List<T>> leftSortedFuture = executorService.submit(leftSorter);
-        Future<List<T>> rightSortedFuture = executorService.submit(rightSorter);
+        Future<?> leftSortedFuture = executorService.submit(leftSorter);
+        Future<?> rightSortedFuture = executorService.submit(rightSorter);
 
-        List<T> left = leftSortedFuture.get();
-        List<T> right = rightSortedFuture.get();
+        leftSortedFuture.get();
+        rightSortedFuture.get();
+
+        List<T> left = leftSorter.sortedResult;
+        List<T> right = rightSorter.sortedResult;
 
         executorService.shutdown();
 
@@ -81,10 +86,17 @@ public class MergeSort<T extends Comparable<T>> implements Callable<List<T>> {
     }
 
     @Override
-    public List<T> call() throws Exception {
+    public List<T> call() {
         // initialize indexes based on numbers input and call sort method
         int startIndex = this.numbers.size() > 0 ? 0 : -1;
         int endIndex = this.numbers.size() > 0 ? this.numbers.size() - 1 : -1;
-        return this.sort(this.numbers, startIndex, endIndex);
+        try {
+            this.sortedResult = this.sort(this.numbers, startIndex, endIndex);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return this.sortedResult;
     }
 }
